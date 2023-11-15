@@ -20,6 +20,7 @@ class TenantServiceProvider extends ServiceProvider
         //Event::listen(\Illuminate\Auth\Events\Login::class, AddSessionTenant::class);
         //Event::listen(\Illuminate\Auth\Events\Logout::class, RemoveSessionTenant::class);
 
+        $this->resolveSubdomainToTenant();
         if (!function_exists('tenantManager')) {
             /** @return TenantManager */
             function tenantManager()
@@ -48,5 +49,28 @@ class TenantServiceProvider extends ServiceProvider
 
     public function register()
     {
+    }
+
+    private function resolveSubdomainToTenant()
+    {
+        if (!$this->app->runningInConsole()) {
+            return;
+        }
+
+        $this->app->singleton(TenantManager::class, function () {
+            $TenantModel = null;
+            $TenantModel = Tenant::where('domain', explode(".", request()->getHost())[0]);
+            $HostSegmentArray = explode(".", request()->getHost());
+            $TenantSlug = $HostSegmentArray[count($HostSegmentArray) - 3];
+            $TenantModel = Tenant::where('domain', $TenantSlug)
+                ->with(['users', 'settings'])
+                ->first();
+
+            if (is_null($TenantModel)) {
+                abort(404, 'Tenant ' . explode(".", request()->getHost())[0] . ' not found (' . request()->getHost() . ')');
+                abort(404, 'Tenant ' . $TenantSlug . ' not found (' . request()->getHost() . ')');
+                die();
+            }
+        });
     }
 }
