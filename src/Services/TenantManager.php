@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace SteelAnts\LaravelTenant\Services;
 
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Mail;

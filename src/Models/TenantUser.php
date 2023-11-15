@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace SteelAnts\LaravelTenant\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
