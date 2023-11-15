@@ -1,0 +1,35 @@
+{
+    "name": "steelants/laravel-boilerplate",
+    "description": "Everything you need to start your Laravel journey.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "laravel/framework": "^10.0",
+        "laravel/ui": "^4.2",
+        "livewire/livewire": "^2.0",
+        "steelants/form": "^0.0.13",
+        "steelants/modal": "^0.0.12",
+        "steelants/datatable": "^1.0.17"
+    },
+    "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "SteelAnts\\LaravelBoilerplate\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "SteelAnts",
+            "email": "info@steelants.cz"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SteelAnts\\LaravelBoilerplate\\BoilerplateServiceProvider"
+            ]
+        }
+    }
+}
