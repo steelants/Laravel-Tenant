@@ -1,14 +1,14 @@
 <?php
 
-use App\Models\Tenant;
+use SteelAnts\LaravelTenant\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 
-class CreateTenantUserTable extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -34,4 +34,4 @@ class CreateTenantUserTable extends Migration
     {
         Schema::dropIfExists('tenant_user');
     }
-}
+};

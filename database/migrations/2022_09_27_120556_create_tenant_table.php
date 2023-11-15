@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTenantsTable extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -18,8 +17,6 @@ class CreateTenantsTable extends Migration
             $table->string("name");
             $table->string("slug");
         });
-
-        
     }
 
     /**
@@ -31,4 +28,4 @@ class CreateTenantsTable extends Migration
     {
         Schema::dropIfExists('organizations');
     }
-}
+};

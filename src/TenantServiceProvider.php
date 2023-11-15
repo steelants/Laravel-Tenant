@@ -41,10 +41,11 @@ class TenantServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->publishes([
-            __DIR__ . '/../lang' => $this->app->langPath('vendor/boilerplate'),
-            __DIR__ . '/../database/migrations' => $this->app->databasePath('migrations'),
-        ]);
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
+        // $this->publishes([
+        //     __DIR__ . '/../database/migrations' => $this->app->databasePath('migrations'),
+        // ]);
     }
 
     public function register()
