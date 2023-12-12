@@ -12,7 +12,10 @@
     "autoload": {
         "psr-4": {
             "SteelAnts\\LaravelTenant\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "authors": [
         {
