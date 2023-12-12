@@ -23,8 +23,14 @@ return new class extends Migration{
                 continue;
             }
             Schema::table($table->{$db}, function ($table) {
-                $table->foreignIdFor(Tenant::class)->constrained();
+                $table->foreignIdFor(Tenant::class)->default(1)->constrained();
+
             });
+            Schema::table($table->{$db}, function ($table) {
+
+            $table->foreignIdFor(Tenant::class)->default(null)->change();
+        });
+
         }
     }
 

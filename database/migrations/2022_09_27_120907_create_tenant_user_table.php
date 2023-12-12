@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -23,6 +24,9 @@ return new class extends Migration {
             $table->smallInteger('permission')->default(0);
             $table->unique(['user_id', 'tenant_id']);
         });
+
+        $users = User::get();
+        Tenant::Find(1)->users()->attach($users);
     }
 
     /**
