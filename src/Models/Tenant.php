@@ -13,12 +13,12 @@ class Tenant extends Model
 
     protected $fillable = [
         'name',
-        'domain',
+        'slug',
     ];
 
-    public function setDomainAttribute($value)
+    public function setSlugAttribute($value)
     {
-        $this->attributes['domain'] = strtolower($value);
+        $this->attributes['slug'] = strtolower($value);
     }
 
     public function users()

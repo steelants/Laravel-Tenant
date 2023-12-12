@@ -22,6 +22,6 @@ class AddSessionTenant
      */
     public function handle($event)
     {
-        session()->put('tenant_id', $event->user->tenant_id);
+        session()->put('tenant_id', $event->user->getCurrentTenant()->id);
     }
 }

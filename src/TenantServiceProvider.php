@@ -2,6 +2,9 @@
 
 namespace SteelAnts\LaravelTenant;
 
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
+
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
@@ -17,8 +20,8 @@ class TenantServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        //Event::listen(\Illuminate\Auth\Events\Login::class, AddSessionTenant::class);
-        //Event::listen(\Illuminate\Auth\Events\Logout::class, RemoveSessionTenant::class);
+        Event::listen(Login::class, AddSessionTenant::class);
+        Event::listen(Logout::class, RemoveSessionTenant::class);
 
         $this->resolveSubdomainToTenant();
         if (!$this->app->runningInConsole()) {
@@ -38,7 +41,7 @@ class TenantServiceProvider extends ServiceProvider
 
     private function resolveSubdomainToTenant()
     {
-        if (!$this->app->runningInConsole()) {
+        if ($this->app->runningInConsole()) {
             return;
         }
 
@@ -48,7 +51,7 @@ class TenantServiceProvider extends ServiceProvider
             $HostSegmentArray = explode(".", request()->getHost());
             $TenantSlug = $HostSegmentArray[count($HostSegmentArray) - 3];
             $TenantModel = Tenant::where('slug', $TenantSlug)
-                ->with(['users', 'settings'])
+                ->with(['users'/*, 'settings'*/])
                 ->first();
 
             if (is_null($TenantModel)) {
@@ -56,6 +59,8 @@ class TenantServiceProvider extends ServiceProvider
                 abort(404, 'Tenant ' . $TenantSlug . ' not found (' . request()->getHost() . ')');
                 die();
             }
+
+            return new TenantManager($TenantModel);
         });
     }
 }
