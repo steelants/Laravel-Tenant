@@ -21,22 +21,6 @@ class TenantServiceProvider extends ServiceProvider
         //Event::listen(\Illuminate\Auth\Events\Logout::class, RemoveSessionTenant::class);
 
         $this->resolveSubdomainToTenant();
-        if (!function_exists('tenantManager')) {
-            /** @return TenantManager */
-            function tenantManager()
-            {
-                return app(TenantManager::class);
-            }
-        }
-
-        if (!function_exists('tenant')) {
-            /** @return Tenant */
-            function tenant()
-            {
-                return app(TenantManager::class)->getTenant();
-            }
-        }
-
         if (!$this->app->runningInConsole()) {
             return;
         }
@@ -60,10 +44,10 @@ class TenantServiceProvider extends ServiceProvider
 
         $this->app->singleton(TenantManager::class, function () {
             $TenantModel = null;
-            $TenantModel = Tenant::where('domain', explode(".", request()->getHost())[0]);
+            $TenantModel = Tenant::where('slug', explode(".", request()->getHost())[0]);
             $HostSegmentArray = explode(".", request()->getHost());
             $TenantSlug = $HostSegmentArray[count($HostSegmentArray) - 3];
-            $TenantModel = Tenant::where('domain', $TenantSlug)
+            $TenantModel = Tenant::where('slug', $TenantSlug)
                 ->with(['users', 'settings'])
                 ->first();
 

@@ -21,7 +21,7 @@ class TenantManager
         $this->configureMailer();
 
         if ($tenant != null) {
-            Config::set('app.url', (config('app.https') ? 'https://' : 'http://') . $tenant->domain . config('app.url_base'));
+            Config::set('app.url', (config('app.https') ? 'https://' : 'http://') . $tenant->slug . config('app.url_base'));
         }
     }
 
