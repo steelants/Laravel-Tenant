@@ -54,13 +54,16 @@ class TenantServiceProvider extends ServiceProvider
                 ->with(['users'/*, 'settings'*/])
                 ->first();
 
-            if (is_null($TenantModel)) {
-                abort(404, 'Tenant ' . explode(".", request()->getHost())[0] . ' not found (' . request()->getHost() . ')');
+                if (is_null($TenantModel)) {
+                    abort(404, 'Tenant ' . explode(".", request()->getHost())[0] . ' not found (' . request()->getHost() . ')');
                 abort(404, 'Tenant ' . $TenantSlug . ' not found (' . request()->getHost() . ')');
                 die();
             }
 
             return new TenantManager($TenantModel);
         });
+
+        //Account for loading in login etc
+        require_once(__DIR__.'/helpers.php');
     }
 }

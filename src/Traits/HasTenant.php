@@ -11,9 +11,17 @@ trait HasTenant
     {
         static::addGlobalScope(new TenantScope());
         static::creating(function ($model) {
-            if (session()->has('tenant_id')) {
-                $model->tenant_id = session()->get('tenant_id');
+            if (app()->runningInConsole()) {
+                return $model;
             }
+
+            $model->tenant_id = tenant()->id;
+
+            if (!session()->has('tenant_id')) {
+                return $model;
+            }
+
+            $model->tenant_id = session()->get('tenant_id');
         });
     }
 
