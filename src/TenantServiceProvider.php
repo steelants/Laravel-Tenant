@@ -63,7 +63,8 @@ class TenantServiceProvider extends ServiceProvider
             return new TenantManager($TenantModel);
         });
 
-        //Account for loading in login etc
+        //Account for loading in login etc.
+        //TODO: Need Investigation
         require_once(__DIR__.'/helpers.php');
     }
 }

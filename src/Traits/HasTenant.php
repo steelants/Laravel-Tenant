@@ -16,6 +16,7 @@ trait HasTenant
             }
 
             $model->tenant_id = tenant()->id;
+
             if (!session()->has('tenant_id')) {
                 return $model;
             }
