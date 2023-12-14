@@ -13,8 +13,7 @@ use SteelAnts\LaravelTenant\Models\Tenant;
 use SteelAnts\LaravelTenant\Services\TenantManager;
 use SteelAnts\LaravelTenant\Listeners\AddSessionTenant;
 use SteelAnts\LaravelTenant\Listeners\RemoveSessionTenant;
-
-
+use SteelAnts\LaravelTenant\Middleware\HasTenant;
 
 class TenantServiceProvider extends ServiceProvider
 {
@@ -24,6 +23,8 @@ class TenantServiceProvider extends ServiceProvider
         Event::listen(Logout::class, RemoveSessionTenant::class);
 
         $this->resolveSubdomainToTenant();
+        $this->app->make('router')->aliasMiddleware('has-tenant', HasTenant::class);
+
         if (!$this->app->runningInConsole()) {
             return;
         }
@@ -47,18 +48,12 @@ class TenantServiceProvider extends ServiceProvider
 
         $this->app->singleton(TenantManager::class, function () {
             $TenantModel = null;
-            $TenantModel = Tenant::where('slug', explode(".", request()->getHost())[0]);
-            $HostSegmentArray = explode(".", request()->getHost());
-            $TenantSlug = $HostSegmentArray[count($HostSegmentArray) - 3];
-            $TenantModel = Tenant::where('slug', $TenantSlug)
+            $Slug = trim(str_replace(trim(config('app.url'),'.'), "", request()->getHost()),'.');
+            $TenantModel = Tenant::where('slug', $Slug)
                 ->with(['users'/*, 'settings'*/])
                 ->first();
 
-                if (is_null($TenantModel)) {
-                    abort(404, 'Tenant ' . explode(".", request()->getHost())[0] . ' not found (' . request()->getHost() . ')');
-                abort(404, 'Tenant ' . $TenantSlug . ' not found (' . request()->getHost() . ')');
-                die();
-            }
+
 
             return new TenantManager($TenantModel);
         });

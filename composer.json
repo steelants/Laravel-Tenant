@@ -10,12 +10,12 @@
         "barryvdh/laravel-debugbar": "^3.9"
     },
     "autoload": {
-        "psr-4": {
-            "SteelAnts\\LaravelTenant\\": "src/"
-        },
         "files": [
             "src/helpers.php"
-        ]
+        ],
+        "psr-4": {
+            "SteelAnts\\LaravelTenant\\": "src/"
+        }
     },
     "authors": [
         {
