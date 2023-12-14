@@ -46,14 +46,12 @@ class TenantServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->app->singleton(TenantManager::class, function () {
+         $this->app->singleton(TenantManager::class, function () {
             $TenantModel = null;
             $Slug = trim(str_replace(trim(config('app.url'),'.'), "", request()->getHost()),'.');
             $TenantModel = Tenant::where('slug', $Slug)
                 ->with(['users'/*, 'settings'*/])
                 ->first();
-
-
 
             return new TenantManager($TenantModel);
         });
