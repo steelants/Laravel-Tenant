@@ -14,6 +14,8 @@ use SteelAnts\LaravelTenant\Services\TenantManager;
 use SteelAnts\LaravelTenant\Listeners\AddSessionTenant;
 use SteelAnts\LaravelTenant\Listeners\RemoveSessionTenant;
 use SteelAnts\LaravelTenant\Middleware\HasTenant;
+use SteelAnts\LaravelTenant\Middleware\DontHaveTenant;
+
 
 class TenantServiceProvider extends ServiceProvider
 {
@@ -24,7 +26,8 @@ class TenantServiceProvider extends ServiceProvider
 
         $this->resolveSubdomainToTenant();
         $this->app->make('router')->aliasMiddleware('has-tenant', HasTenant::class);
-
+        $this->app->make('router')->aliasMiddleware('dont-have-tenant', DontHaveTenant::class);
+        
         if (!$this->app->runningInConsole()) {
             return;
         }
