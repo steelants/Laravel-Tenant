@@ -9,11 +9,11 @@ class DontHaveTenant
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!isset(tenant()) || is_null(tenant())) {
+        if (null !== tenant() || is_null(tenant())) {
             return $next($request);
         }
 
-        abort(404, 'Page must be without tenant (' . tenant()->slug . ')');
+        abort(404, 'Tenant not found (' . request()->getHost() . ')');
         die();
     }
 }
