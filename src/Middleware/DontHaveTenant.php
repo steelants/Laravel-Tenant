@@ -13,7 +13,7 @@ class DontHaveTenant
             return $next($request);
         }
 
-        abort(404, 'Tenant not found (' . request()->getHost() . ')');
+        abort(404, 'Page must be without tenant (' . tenant()->slug . ')');
         die();
     }
 }
