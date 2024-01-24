@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 use SteelAnts\LaravelTenant\Models\Tenant;
 
 return new class extends Migration{
-    private $skipTables = ['jobs', 'failed_jobs', 'users', 'migrations', 'password_reset_tokens' , 'tenants'];
+    private $skipTables = ['jobs', 'failed_jobs', 'users', 'migrations', 'password_resets', 'password_reset_tokens' , 'tenants'];
     /**
      * Run the migrations.
      *
