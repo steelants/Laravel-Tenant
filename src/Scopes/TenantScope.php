@@ -5,7 +5,6 @@ namespace SteelAnts\LaravelTenant\Scopes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
-include_once(__DIR__.'../helpers.php');
 
 class TenantScope implements Scope
 {
