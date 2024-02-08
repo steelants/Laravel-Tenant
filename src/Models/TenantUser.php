@@ -10,7 +10,7 @@ class TenantUser extends Pivot
 
     protected $fillable = [
         'user_id',
-        'organization_id',
+        'tenant_id',
         'permission',
     ];
 
