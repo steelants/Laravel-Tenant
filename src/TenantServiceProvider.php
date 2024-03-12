@@ -26,7 +26,7 @@ class TenantServiceProvider extends ServiceProvider
         Event::listen(Login::class, AddSessionTenant::class);
         Event::listen(Logout::class, RemoveSessionTenant::class);
 
-        switch (config('app.url', 'subdomain')) {
+        switch (config('tenant.resolver', 'subdomain')) {
             case 'subdomain':
                 $this->resolveSubdomainToTenant($request);
                 break;

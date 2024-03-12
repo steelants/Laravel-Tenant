@@ -10,5 +10,5 @@
 */
 
 return [
-    'tenant_resolver' => 'subdomain'
+    'resolver' => 'subdomain'
 ];
