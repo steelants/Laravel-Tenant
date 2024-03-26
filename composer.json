@@ -4,7 +4,7 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "laravel/framework": "^10.0"
+        "laravel/framework": "^11.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.9"
