@@ -12,3 +12,5 @@
 return [
     'resolver' => 'subdomain'
 ];
+
+/*TEST*/
