@@ -20,7 +20,7 @@ class TenantManager
         $this->tenant = $tenant;
         //$this->configureMailer();
 
-        if ($tenant != null) {
+        if ($tenant != null && config('tenant.resolver') == 'subdomain') {
             Config::set('app.url', (config('app.https') ? 'https://' : 'http://') . $tenant->slug . config('app.url'));
             #Config::set('app.asset_url', (config('app.https') ? 'https://' : 'http://') . $tenant->slug . config('app.asset_url'));
         }

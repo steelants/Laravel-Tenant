@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Tenant;
+use SteelAnts\LaravelTenant\Models\Tenant;
 
 return new class extends Migration {
     /**
@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->id();
             $table->string("name");
             $table->string("slug");
+            $table->timestamps();
         });
 
         Tenant::create([

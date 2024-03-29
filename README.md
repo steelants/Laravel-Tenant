@@ -9,6 +9,8 @@
 
 ### Install
 
+<!-- 
+already in composer.json in pakcage
 Add `'url_base' => env('APP_URL', 'http://localhost'),` into `config/app.php`
 
 To use globaly tenant manager as `tenant()` add `app/helpers.php` into `autoload.files` config in `composer.json`
@@ -23,7 +25,7 @@ To use globaly tenant manager as `tenant()` add `app/helpers.php` into `autoload
     },
     ...
 }
-```
+``` -->
 
 If your tenants have thier own SMTP settings, add following into `mailers` array in `config/mail.php`
 ```

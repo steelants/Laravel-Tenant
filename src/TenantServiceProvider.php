@@ -7,11 +7,9 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 
 use Illuminate\Http\Request;
-use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
-use SteelAnts\LaravelTenant\Models\Tenant;
 use SteelAnts\LaravelTenant\Services\TenantManager;
 use SteelAnts\LaravelTenant\Listeners\AddSessionTenant;
 use SteelAnts\LaravelTenant\Listeners\RemoveSessionTenant;
@@ -23,19 +21,26 @@ class TenantServiceProvider extends ServiceProvider
 {
     public function boot(Request $request)
     {
-        
-        switch (config('tenant.resolver', 'subdomain')) {
-            case 'subdomain':
-                $this->resolveSubdomainToTenant($request);
-                break;
+        if (session()->has('tenant_id')) {
+            $this->resolveTenantFromSession();
+        } else {
+            switch (config('tenant.resolver', 'subdomain')) {
+                case 'subdomain':
+                    $this->resolveSubdomainToTenant($request);
+                    break;
 
-            case 'path':
-                $this->resolvePathToTenant($request);
-                break;
+                case 'path':
+                    $this->resolvePathToTenant($request);
+                    break;
 
-            default:
-                throw new Exception("Tenant resolver not defined !!!");
-                break;
+                case 'session':
+                    $this->resolveTenantFromSession();
+                    break;
+
+                default:
+                    throw new Exception("Tenant resolver not defined !!!");
+                    break;
+            }
         }
 
         Event::listen(Login::class, AddSessionTenant::class);
@@ -51,9 +56,12 @@ class TenantServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         $this->publishes([
-            //     __DIR__ . '/../database/migrations' => $this->app->databasePath('migrations'),
             __DIR__ . '/../config/tenant.php' => config_path('tenant.php'),
-        ]);
+        ], 'tenant-config');
+
+        $this->publishes([
+            __DIR__ . '/../database/migrations' => database_path('migrations'),
+        ], 'tenant-migrations');
     }
 
     public function register()
@@ -67,13 +75,13 @@ class TenantServiceProvider extends ServiceProvider
         }
 
         $this->app->singleton(TenantManager::class, function () use ($request) {
-            $TenantModel = null;
-            $Slug = trim(str_replace(trim(config('app.url'), '.'), "", $request->getHost()), '.');
-            $TenantModel = Tenant::where('slug', $Slug)
+            $tenantModel = null;
+            $slug = trim(str_replace(trim(config('app.url'), '.'), "", $request->getHost()), '.');
+            $tenantModel = (config('tennat.tenant_model'))::where('slug', $slug)
                 ->with(['users'/*, 'settings'*/])
                 ->first();
 
-            return new TenantManager($TenantModel);
+            return new TenantManager($tenantModel);
         });
     }
 
@@ -84,13 +92,29 @@ class TenantServiceProvider extends ServiceProvider
         }
 
         $this->app->singleton(TenantManager::class, function () use ($request) {
-            $TenantModel = null;
-            $Slug =  $request->route('tenant');
-            $TenantModel = Tenant::where('slug', $Slug)
+            $tenantModel = null;
+            $slug =  $request->route('tenant');
+            $tenantModel = (config('tennat.tenant_model'))::where('slug', $slug)
                 ->with(['users'/*, 'settings'*/])
                 ->first();
 
-            return new TenantManager($TenantModel);
+            return new TenantManager($tenantModel);
+        });
+    }
+
+    private function resolveTenantFromSession()
+    {
+        if ($this->app->runningInConsole() || !session()->has('tenant_id')) {
+            return;
+        }
+
+        $this->app->singleton(TenantManager::class, function () {
+            $tenantModel = null;
+            $tenantModel = (config('tennat.tenant_model'))::find(session()->get('tenant_id'))
+                ->with(['users'/*, 'settings'*/])
+                ->first();
+
+            return new TenantManager($tenantModel);
         });
     }
 }

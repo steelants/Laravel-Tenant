@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
 class Tenant extends Model
 {
     use HasFactory;
-    public $timestamps = false;
 
     protected $fillable = [
         'name',
