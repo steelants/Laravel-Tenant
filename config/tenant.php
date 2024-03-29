@@ -8,7 +8,7 @@ use SteelAnts\LaravelTenant\Models\TenantUser;
 | Tenant Resolver
 |--------------------------------------------------------------------------
 |
-| can be either subdomain ({tenant_slug}.test.test) of path (test.test/{tenant_slug})
+| can be either subdomain ({tenant_slug}.test.test) or path (test.test/{tenant_slug}) or session
 |
 */
 
