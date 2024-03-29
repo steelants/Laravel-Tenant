@@ -23,6 +23,7 @@ class TenantServiceProvider extends ServiceProvider
 {
     public function boot(Request $request)
     {
+        
         switch (config('tenant.resolver', 'subdomain')) {
             case 'subdomain':
                 $this->resolveSubdomainToTenant($request);
@@ -37,10 +38,6 @@ class TenantServiceProvider extends ServiceProvider
                 break;
         }
 
-        //Account for loading in login etc.
-        //TODO: Need Investigation
-        require_once(__DIR__ . '/helpers.php');
-        
         Event::listen(Login::class, AddSessionTenant::class);
         Event::listen(Logout::class, RemoveSessionTenant::class);
 
