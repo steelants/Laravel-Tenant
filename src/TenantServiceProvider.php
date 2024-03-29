@@ -37,6 +37,10 @@ class TenantServiceProvider extends ServiceProvider
                 break;
         }
 
+        //Account for loading in login etc.
+        //TODO: Need Investigation
+        require_once(__DIR__ . '/helpers.php');
+        
         Event::listen(Login::class, AddSessionTenant::class);
         Event::listen(Logout::class, RemoveSessionTenant::class);
 
@@ -74,10 +78,6 @@ class TenantServiceProvider extends ServiceProvider
 
             return new TenantManager($TenantModel);
         });
-
-        //Account for loading in login etc.
-        //TODO: Need Investigation
-        require_once(__DIR__ . '/helpers.php');
     }
 
     private function resolvePathToTenant(Request $request)
@@ -95,9 +95,5 @@ class TenantServiceProvider extends ServiceProvider
 
             return new TenantManager($TenantModel);
         });
-
-        //Account for loading in login etc.
-        //TODO: Need Investigation
-        require_once(__DIR__ . '/helpers.php');
     }
 }
