@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreignIdFor(Tenant::class)->constrained();
             $table->smallInteger('permission')->default(0);
             $table->unique(['user_id', 'tenant_id']);
+            $table->timestamps();
         });
 
         $users = User::get();

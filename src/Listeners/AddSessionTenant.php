@@ -11,7 +11,6 @@ class AddSessionTenant
      */
     public function __construct()
     {
-
     }
 
     /**
@@ -22,6 +21,17 @@ class AddSessionTenant
      */
     public function handle($event)
     {
-        session()->put('tenant_id', $event->user->getCurrentTenant()->id);
+        switch (config('tenant.resolver', 'subdomain')) {
+            case 'subdomain':
+            case 'path':
+                session()->put('tenant_id', $event->user->getCurrentTenant()->id);
+                break;
+
+            case 'session':
+                break;
+
+            default:
+                break;
+        }
     }
 }

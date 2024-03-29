@@ -1,5 +1,8 @@
 <?php
 
+use SteelAnts\LaravelTenant\Models\Tenant;
+use SteelAnts\LaravelTenant\Models\TenantUser;
+
 /*
 |--------------------------------------------------------------------------
 | Tenant Resolver
@@ -10,5 +13,9 @@
 */
 
 return [
-    'resolver' => 'subdomain'
+    'resolver' => 'subdomain',
+    'tenant_model' => Tenant::class,
+    'tenant_user_model' => TenantUser::class,
 ];
+
+/*TEST*/

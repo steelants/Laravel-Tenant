@@ -6,8 +6,22 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use SteelAnts\LaravelTenant\Models\Tenant;
 
-return new class extends Migration{
-    private $skipTables = ['jobs', 'failed_jobs', 'users', 'migrations', 'password_resets', 'password_reset_tokens' , 'tenants'];
+return new class extends Migration
+{
+    private $skipTables = [
+        'jobs', 
+        'job_batches', 
+        'failed_jobs', 
+        'users', 
+        'migrations', 
+        'password_resets', 
+        'password_reset_tokens', 
+        'tenants',
+        'cache',
+        'cache_locks',
+        'sessions',
+    ];
+
     /**
      * Run the migrations.
      *
@@ -16,7 +30,7 @@ return new class extends Migration{
     public function up()
     {
         $tables = DB::select('SHOW TABLES');
-        $db = "Tables_in_".DB::connection()->getDatabaseName();
+        $db = "Tables_in_" . DB::connection()->getDatabaseName();
 
         foreach ($tables as $table) {
             if (in_array($table->{$db}, $this->skipTables)) {
@@ -24,13 +38,11 @@ return new class extends Migration{
             }
             Schema::table($table->{$db}, function ($table) {
                 $table->foreignIdFor(Tenant::class)->default(1)->constrained();
-
             });
             Schema::table($table->{$db}, function ($table) {
 
-            $table->foreignIdFor(Tenant::class)->default(null)->change();
-        });
-
+                $table->foreignIdFor(Tenant::class)->default(null)->change();
+            });
         }
     }
 
@@ -42,7 +54,7 @@ return new class extends Migration{
     public function down()
     {
         $tables = DB::select('SHOW TABLES');
-        $db = "Tables_in_".DB::connection()->getDatabaseName();
+        $db = "Tables_in_" . DB::connection()->getDatabaseName();
 
         foreach ($tables as $table) {
             if (in_array($table->{$db}, $this->skipTables)) {
