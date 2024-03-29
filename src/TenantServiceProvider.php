@@ -53,13 +53,13 @@ class TenantServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        // $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         $this->publishes([
             __DIR__ . '/../config/tenant.php' => config_path('tenant.php'),
         ], 'tenant-config');
 
-        $this->publishes([
+        $this->publishesMigrations([
             __DIR__ . '/../database/migrations' => database_path('migrations'),
         ], 'tenant-migrations');
     }

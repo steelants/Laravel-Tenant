@@ -9,6 +9,11 @@
 
 ### Install
 
+```
+php artisan vendor:publish --tag=tenant-migrations
+php artisan migrate
+```
+
 <!-- 
 already in composer.json in pakcage
 Add `'url_base' => env('APP_URL', 'http://localhost'),` into `config/app.php`
