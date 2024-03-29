@@ -23,9 +23,6 @@ class TenantServiceProvider extends ServiceProvider
 {
     public function boot(Request $request)
     {
-        Event::listen(Login::class, AddSessionTenant::class);
-        Event::listen(Logout::class, RemoveSessionTenant::class);
-
         switch (config('tenant.resolver', 'subdomain')) {
             case 'subdomain':
                 $this->resolveSubdomainToTenant($request);
@@ -39,6 +36,9 @@ class TenantServiceProvider extends ServiceProvider
                 throw new Exception("Tenant resolver not defined !!!");
                 break;
         }
+
+        Event::listen(Login::class, AddSessionTenant::class);
+        Event::listen(Logout::class, RemoveSessionTenant::class);
 
         $this->app->make('router')->aliasMiddleware('has-tenant', HasTenant::class);
         $this->app->make('router')->aliasMiddleware('dont-have-tenant', DontHaveTenant::class);
