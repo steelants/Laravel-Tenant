@@ -28,10 +28,10 @@ return new class extends Migration
     public function up()
     {
         foreach (Schema::getTables() as $table) {
-            if (in_array($table->name, $this->skipTables)) {
+            if (in_array($table['name'], $this->skipTables)) {
                 continue;
             }
-            Schema::table($table->name, function ($table) {
+            Schema::table($table['name'], function ($table) {
                 $table->foreignIdFor(Tenant::class)->nullable()->constrained();
             });
         }
@@ -45,7 +45,7 @@ return new class extends Migration
     public function down()
     {
         foreach (Schema::getTables() as $table) {
-            if (in_array($table->name, $this->skipTables)) {
+            if (in_array($table['name'], $this->skipTables)) {
                 continue;
             }
 
