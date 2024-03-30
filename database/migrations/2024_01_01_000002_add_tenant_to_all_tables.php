@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use SteelAnts\LaravelTenant\Models\Tenant;
@@ -9,13 +8,13 @@ use SteelAnts\LaravelTenant\Models\Tenant;
 return new class extends Migration
 {
     private $skipTables = [
-        'jobs', 
-        'job_batches', 
-        'failed_jobs', 
-        'users', 
-        'migrations', 
-        'password_resets', 
-        'password_reset_tokens', 
+        'jobs',
+        'job_batches',
+        'failed_jobs',
+        'users',
+        'migrations',
+        'password_resets',
+        'password_reset_tokens',
         'tenants',
         'cache',
         'cache_locks',
@@ -29,9 +28,9 @@ return new class extends Migration
      */
     public function up()
     {
-        if(config('database.default') == 'sqlite'){
+        if (config('database.default') == 'sqlite') {
             DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
-        }else{
+        } else {
             $tables = DB::select('SHOW TABLES');
         }
         $db = "Tables_in_" . DB::connection()->getDatabaseName();
@@ -41,11 +40,7 @@ return new class extends Migration
                 continue;
             }
             Schema::table($table->{$db}, function ($table) {
-                $table->foreignIdFor(Tenant::class)->default(1)->constrained();
-            });
-            Schema::table($table->{$db}, function ($table) {
-
-                $table->foreignIdFor(Tenant::class)->default(null)->change();
+                $table->foreignIdFor(Tenant::class)->nullable()->constrained();
             });
         }
     }
@@ -57,7 +52,11 @@ return new class extends Migration
      */
     public function down()
     {
-        $tables = DB::select('SHOW TABLES');
+        if (config('database.default') == 'sqlite') {
+            DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
+        } else {
+            $tables = DB::select('SHOW TABLES');
+        }
         $db = "Tables_in_" . DB::connection()->getDatabaseName();
 
         foreach ($tables as $table) {
