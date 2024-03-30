@@ -29,7 +29,7 @@ return new class extends Migration
     public function up()
     {
         if (config('database.default') == 'sqlite') {
-            DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
+            $tables = DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
         } else {
             $tables = DB::select('SHOW TABLES');
         }
@@ -53,7 +53,7 @@ return new class extends Migration
     public function down()
     {
         if (config('database.default') == 'sqlite') {
-            DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
+            $tables = DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
         } else {
             $tables = DB::select('SHOW TABLES');
         }
