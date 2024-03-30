@@ -29,7 +29,11 @@ return new class extends Migration
      */
     public function up()
     {
-        $tables = DB::select('SHOW TABLES');
+        if(config('database.default') == 'sqlite'){
+            DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
+        }else{
+            $tables = DB::select('SHOW TABLES');
+        }
         $db = "Tables_in_" . DB::connection()->getDatabaseName();
 
         foreach ($tables as $table) {
