@@ -5,10 +5,11 @@ namespace SteelAnts\LaravelTenant\Services;
 use SteelAnts\LaravelTenant\Models\Tenant;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Database\Eloquent\Model;
 
 class TenantManager
 {
-    private ?Tenant $tenant;
+    private ?Model $tenant;
 
     public function __construct($tenant = null)
     {
