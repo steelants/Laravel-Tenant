@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use SteelAnts\LaravelTenant\Models\Tenant;
 
@@ -28,18 +27,11 @@ return new class extends Migration
      */
     public function up()
     {
-        if (config('database.default') == 'sqlite') {
-            $tables = DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
-        } else {
-            $tables = DB::select('SHOW TABLES');
-        }
-        $db = "Tables_in_" . DB::connection()->getDatabaseName();
-
-        foreach ($tables as $table) {
-            if (in_array($table->{$db}, $this->skipTables)) {
+        foreach (Schema::getTables() as $table) {
+            if (in_array($table->name, $this->skipTables)) {
                 continue;
             }
-            Schema::table($table->{$db}, function ($table) {
+            Schema::table($table->name, function ($table) {
                 $table->foreignIdFor(Tenant::class)->nullable()->constrained();
             });
         }
@@ -52,15 +44,8 @@ return new class extends Migration
      */
     public function down()
     {
-        if (config('database.default') == 'sqlite') {
-            $tables = DB::select("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
-        } else {
-            $tables = DB::select('SHOW TABLES');
-        }
-        $db = "Tables_in_" . DB::connection()->getDatabaseName();
-
-        foreach ($tables as $table) {
-            if (in_array($table->{$db}, $this->skipTables)) {
+        foreach (Schema::getTables() as $table) {
+            if (in_array($table->name, $this->skipTables)) {
                 continue;
             }
 
