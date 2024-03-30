@@ -51,11 +51,11 @@ class TenantServiceProvider extends ServiceProvider
         ], 'tenant-migrations');
 
         // TODO
-        $this->loadRoutesFrom(__DIR__ . '/../assets/routes.php');
+        // $this->loadRoutesFrom(__DIR__ . '/../assets/routes.php');
 
-        $this->publishes([
-            __DIR__ . '/../assets/tenant.stub.php' => base_path('routes/tenant.php'),
-        ], 'routes');
+        // $this->publishes([
+        //     __DIR__ . '/../assets/tenant.stub.php' => base_path('routes/tenant.php'),
+        // ], 'routes');
     }
 
     public function register()
