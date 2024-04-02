@@ -10,13 +10,14 @@ trait HasTenant
     protected static function bootHasTenant()
     {
         static::addGlobalScope(new TenantScope());
-
         static::creating(function ($model) {
             if (app()->runningInConsole()) {
                 return $model;
             }
 
-            $model->tenant_id = tenant()->id;
+            if(empty($model->tenant_id)){
+                $model->tenant_id = tenant()->id;
+            }
         });
     }
 
