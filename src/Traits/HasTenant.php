@@ -11,7 +11,7 @@ trait HasTenant
     {
         static::addGlobalScope(new TenantScope());
         static::creating(function ($model) {
-            if (tenant() != null) {
+            if (tenant() == null) {
                 return $model;
             }
 
