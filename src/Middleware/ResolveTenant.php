@@ -36,7 +36,8 @@ class ResolveTenant
 
     private function resolveSubdomainToTenant(Request $request)
     {
-        $slug = trim(str_replace(trim(config('app.url'), '.'), "", $request->getHost()), '.');
+        $appDomainRootWithoutPort = str_replace( ":". $request->getPort() , "", trim(config('app.url'), '.'));
+        $slug = trim(str_replace($appDomainRootWithoutPort, "", $request->getHost()), '.');
         $tenant = (config('tenant.tenant_model'))::with(['users'/*, 'settings'*/])
             ->where('slug', $slug)
             ->first();
