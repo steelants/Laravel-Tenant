@@ -22,7 +22,9 @@ class TenantManager
         //$this->configureMailer();
 
         if ($tenant != null && config('tenant.resolver') == 'subdomain') {
-            Config::set('app.url', (config('app.https') ? 'https://' : 'http://') . $tenant->slug . config('app.url'));
+            $clearTenantRoot = trim(trim(trim(config('app.url'), "."), "https://"), "http://");
+            Config::set('app.url_root', config('app.url'));
+            Config::set('app.url', (config('app.https') ? 'https://' : 'http://') . $tenant->slug . '.' . $clearTenantRoot);
             #Config::set('app.asset_url', (config('app.https') ? 'https://' : 'http://') . $tenant->slug . config('app.asset_url'));
         }
     }
