@@ -9,26 +9,26 @@ class ResolveTenant
 {
     public function handle(Request $request, Closure $next)
     {
-        if (session()->has('tenant_id')) {
-            $this->resolveTenantFromSession();
-        } else {
-            switch (config('tenant.resolver', 'subdomain')) {
-                case 'subdomain':
-                    $this->resolveSubdomainToTenant($request);
-                    break;
+        switch (config('tenant.resolver', 'subdomain')) {
+            case 'subdomain':
+                $this->resolveSubdomainToTenant($request);
+                break;
 
-                case 'path':
-                    $this->resolvePathToTenant($request);
-                    break;
+            case 'path':
+                $this->resolvePathToTenant($request);
+                break;
 
-                case 'session':
-                    $this->resolveTenantFromSession();
-                    break;
+            case 'session':
+                $this->resolveTenantFromSession();
+                break;
 
-                default:
-                    throw new Exception("Tenant resolver not defined !!!");
-                    break;
-            }
+            case 'static':
+                $this->resolveStaticTenant();
+                break;
+
+            default:
+                throw new Exception("Tenant resolver not defined !!!");
+                break;
         }
 
         return $next($request);
@@ -63,6 +63,13 @@ class ResolveTenant
             $tenant = (config('tenant.tenant_model'))::with(['users'/*, 'settings'*/])
                 ->find(session()->get('tenant_id'));
         }
+
+        tenantManager()->set($tenant);
+    }
+
+    private function resolveStaticTenant(){
+        $tenant = (config('tenant.tenant_model'))::with(['users'/*, 'settings'*/])
+            ->find(config('tenant.tenant_id'));
 
         tenantManager()->set($tenant);
     }
