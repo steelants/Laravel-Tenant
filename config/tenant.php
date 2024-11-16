@@ -13,7 +13,7 @@ use SteelAnts\LaravelTenant\Models\TenantUser;
 */
 
 return [
-    'resolver' => 'subdomain',
+    'resolver' => env('TENANT_RESOLVER', 'subdomain'),
     'tenant_model' => Tenant::class,
     'tenant_user_model' => TenantUser::class,
     'tenant_id' => env('TENANT_ID', 0), // only for "static" resolver
