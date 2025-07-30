@@ -32,7 +32,7 @@ return new class extends Migration
                 continue;
             }
             Schema::table($table['name'], function ($table) {
-                $table->foreignIdFor(Tenant::class)->nullable()->constrained();
+                $table->foreignIdFor(Tenant::class)->nullable()->index()->constrained();
             });
         }
     }
