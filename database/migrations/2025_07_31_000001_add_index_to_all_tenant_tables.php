@@ -1,25 +1,12 @@
 <?php
 
+use SteelAnts\LaravelTenant\Models\Tenant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
-use SteelAnts\LaravelTenant\Models\Tenant;
+
 
 return new class extends Migration
 {
-    private $skipTables = [
-        'jobs',
-        'job_batches',
-        'failed_jobs',
-        'users',
-        'migrations',
-        'password_resets',
-        'password_reset_tokens',
-        'tenants',
-        'cache',
-        'cache_locks',
-        'sessions',
-    ];
-
     /**
      * Run the migrations.
      *
@@ -28,11 +15,16 @@ return new class extends Migration
     public function up()
     {
         foreach (Schema::getTables() as $table) {
-            if (in_array($table['name'], $this->skipTables)) {
+            if (!Schema::hasColumn($table['name'], 'tenant_id')) {
                 continue;
             }
+
+            if (Schema::hasIndex($table['name'], ['tenant_id'])) {
+                continue;
+            }
+
             Schema::table($table['name'], function ($table) {
-                $table->foreignIdFor(Tenant::class)->nullable()->constrained();
+                $table->index('tenant_id');
             });
         }
     }
@@ -45,13 +37,16 @@ return new class extends Migration
     public function down()
     {
         foreach (Schema::getTables() as $table) {
-            if (in_array($table['name'], $this->skipTables)) {
+            if (!Schema::hasColumn($table['name'], 'tenant_id')) {
+                continue;
+            }
+
+            if (!Schema::hasIndex($table['name'], ['tenant_id'])) {
                 continue;
             }
 
             Schema::table('users', function ($table) {
-                $table->dropForeign([$table . '_tenant_tenant_id_foreign']);
-                $table->dropColumn('tenant_id');
+                $table->dropIndex(['tenant_id']);
             });
         }
     }
