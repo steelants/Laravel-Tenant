@@ -3,6 +3,7 @@
 namespace SteelAnts\LaravelTenant\Middleware;
 
 use Closure;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class ResolveTenant
@@ -34,18 +35,19 @@ class ResolveTenant
         return $next($request);
     }
 
-    private function resolveSubdomainToTenant(Request $request)
+    private function resolveSubdomainToTenant(Request $request): Model
     {
-        $appDomainRootWithoutPort = str_replace( ":". $request->getPort() , "", trim(config('app.url'), '.'));
+        $appDomainRootWithoutPort = str_replace(":" . $request->getPort(), "", trim(config('app.url'), '.'));
         $slug = trim(str_replace($appDomainRootWithoutPort, "", $request->getHost()), '.');
         $tenant = (config('tenant.tenant_model'))::with(['users'/*, 'settings'*/])
             ->where('slug', $slug)
             ->first();
 
         tenantManager()->set($tenant);
+        return $tenant;
     }
 
-    private function resolvePathToTenant(Request $request)
+    private function resolvePathToTenant(Request $request): Model
     {
         $slug =  $request->route('tenant');
         $tenant = (config('tenant.tenant_model'))::with(['users'/*, 'settings'*/])
@@ -53,6 +55,7 @@ class ResolveTenant
             ->first();
 
         tenantManager()->set($tenant);
+        return $tenant;
     }
 
     private function resolveTenantFromSession()
@@ -65,5 +68,6 @@ class ResolveTenant
         }
 
         tenantManager()->set($tenant);
+        return $tenant;
     }
 }
