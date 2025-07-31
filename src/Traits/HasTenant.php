@@ -11,12 +11,12 @@ trait HasTenant
     {
         static::addGlobalScope(new TenantScope());
         static::creating(function ($model) {
-            if (tenant() == null) {
+            if (tenant() == null && tenantManager() == null) {
                 return $model;
             }
 
             if(empty($model->tenant_id)){
-                $model->tenant_id = tenant()->id;
+                $model->tenant_id = (tenant()->id ?? tenantManager()->id);
             }
         });
     }
