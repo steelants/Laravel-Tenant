@@ -5,6 +5,7 @@ namespace SteelAnts\LaravelTenant\Middleware;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Exception;
 
 class ResolveTenant
@@ -38,8 +39,8 @@ class ResolveTenant
 
     private function resolveSubdomainToTenant(Request $request): ?Model
     {
-        $appDomainRootWithoutPort = str_replace(":". $request->getPort(), "", trim(config('app.url'), '.'));
-        $slug = trim(str_replace($appDomainRootWithoutPort, "", $request->getHost()), '.');
+        $appDomainRootWithoutPort = Str::replace(":". $request->getPort(), "", Str::trim(config('app.url'), '.'));
+        $slug = trim(Str::replace($appDomainRootWithoutPort, "", $request->getHost()), '.');
         $tenant = (config('tenant.tenant_model'))::with(['users'/*, 'settings'*/])
             ->where('slug', $slug)
             ->first();
