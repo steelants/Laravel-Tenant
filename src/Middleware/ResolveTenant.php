@@ -5,6 +5,7 @@ namespace SteelAnts\LaravelTenant\Middleware;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Exception;
 
 class ResolveTenant
 {
