@@ -2,21 +2,17 @@
 
 namespace SteelAnts\LaravelTenant;
 
-use Exception;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
-
 use Illuminate\Http\Request;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Event;
-
-use SteelAnts\LaravelTenant\Services\TenantManager;
+use Illuminate\Support\ServiceProvider;
 use SteelAnts\LaravelTenant\Listeners\AddSessionTenant;
 use SteelAnts\LaravelTenant\Listeners\RemoveSessionTenant;
-use SteelAnts\LaravelTenant\Middleware\HasTenant;
 use SteelAnts\LaravelTenant\Middleware\DontHaveTenant;
+use SteelAnts\LaravelTenant\Middleware\HasTenant;
 use SteelAnts\LaravelTenant\Middleware\ResolveTenant;
-
+use SteelAnts\LaravelTenant\Services\TenantManager;
 
 class TenantServiceProvider extends ServiceProvider
 {

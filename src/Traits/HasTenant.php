@@ -15,7 +15,7 @@ trait HasTenant
                 return $model;
             }
 
-            if(empty($model->tenant_id)){
+            if (empty($model->tenant_id)) {
                 $model->tenant_id = (tenant()->id ?? tenantManager()->id);
             }
         });

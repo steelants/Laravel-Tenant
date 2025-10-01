@@ -37,7 +37,7 @@ class ResolveTenant
 
     private function resolveSubdomainToTenant(Request $request): Model
     {
-        $appDomainRootWithoutPort = str_replace(":" . $request->getPort(), "", trim(config('app.url'), '.'));
+        $appDomainRootWithoutPort = str_replace(":". $request->getPort(), "", trim(config('app.url'), '.'));
         $slug = trim(str_replace($appDomainRootWithoutPort, "", $request->getHost()), '.');
         $tenant = (config('tenant.tenant_model'))::with(['users'/*, 'settings'*/])
             ->where('slug', $slug)
@@ -49,7 +49,7 @@ class ResolveTenant
 
     private function resolvePathToTenant(Request $request): Model
     {
-        $slug =  $request->route('tenant');
+        $slug = $request->route('tenant');
         $tenant = (config('tenant.tenant_model'))::with(['users'/*, 'settings'*/])
             ->where('slug', $slug)
             ->first();
@@ -71,7 +71,8 @@ class ResolveTenant
         return $tenant;
     }
 
-    private function resolveStaticTenant(){
+    private function resolveStaticTenant()
+    {
         $tenant = (config('tenant.tenant_model'))::with(['users'/*, 'settings'*/])
             ->find(config('tenant.tenant_id'));
 
