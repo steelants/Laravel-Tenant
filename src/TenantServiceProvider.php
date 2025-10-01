@@ -18,6 +18,8 @@ class TenantServiceProvider extends ServiceProvider
 {
     public function boot(Request $request)
     {
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
         $this->app->singleton(TenantManager::class, function () {
             return new TenantManager(null);
         });
@@ -32,12 +34,24 @@ class TenantServiceProvider extends ServiceProvider
         $router = $this->app['router'];
         $router->pushMiddlewareToGroup('web', ResolveTenant::class);
 
-        if (!$this->app->runningInConsole()) {
-            return;
+        if ($this->app->runningInConsole()) {
+            $this->bootConsole();
         }
+    }
 
-        // $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+    public function register()
+    {
+        $this->mergeConfigFrom(
+			__DIR__.'/../config/tenant.php',
+			'tenant-config'
+		);
+    }
 
+    /**
+     * Boot logic for console environment.
+     */
+    protected function bootConsole()
+    {
         $this->publishes([
             __DIR__ . '/../config/tenant.php' => config_path('tenant.php'),
         ], 'tenant-config');
@@ -45,16 +59,5 @@ class TenantServiceProvider extends ServiceProvider
         $this->publishesMigrations([
             __DIR__ . '/../database/migrations' => database_path('migrations'),
         ], 'tenant-migrations');
-
-        // TODO
-        // $this->loadRoutesFrom(__DIR__ . '/../assets/routes.php');
-
-        // $this->publishes([
-        //     __DIR__ . '/../assets/tenant.stub.php' => base_path('routes/tenant.php'),
-        // ], 'routes');
-    }
-
-    public function register()
-    {
     }
 }
