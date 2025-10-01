@@ -35,7 +35,7 @@ class ResolveTenant
         return $next($request);
     }
 
-    private function resolveSubdomainToTenant(Request $request): Model
+    private function resolveSubdomainToTenant(Request $request): ?Model
     {
         $appDomainRootWithoutPort = str_replace(":". $request->getPort(), "", trim(config('app.url'), '.'));
         $slug = trim(str_replace($appDomainRootWithoutPort, "", $request->getHost()), '.');

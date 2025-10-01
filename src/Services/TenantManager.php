@@ -4,6 +4,7 @@ namespace SteelAnts\LaravelTenant\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 
 class TenantManager
 {
@@ -21,8 +22,8 @@ class TenantManager
             if (!config()->has('app.url_root')) {
                 Config::set('app.url_root', config('app.url'));
             }
-
-            $clearTenantRoot = trim(trim(trim(config('app.url_root'), "."), "https://"), "http://");
+            
+            $clearTenantRoot = Str::remove("http://", Str::remove("https://", Str::trim(config('app.url_root'), ".")));
 
             Config::set('app.url', (config('app.https') ? 'https://' : 'http://') . $tenant->slug . '.' . $clearTenantRoot);
             if (method_exists(config('tenant.tenant_model'), 'initialize')) {
