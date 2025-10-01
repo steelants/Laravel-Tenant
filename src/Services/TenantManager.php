@@ -2,9 +2,9 @@
 
 namespace SteelAnts\LaravelTenant\Services;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 
 class TenantManager
 {
