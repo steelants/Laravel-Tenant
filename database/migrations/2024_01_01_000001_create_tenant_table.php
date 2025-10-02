@@ -13,17 +13,19 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('tenants', function (Blueprint $table) {
-            $table->id();
-            $table->string("name");
-            $table->string("slug");
-            $table->timestamps();
-        });
+        if ( !Schema::hasTable('tenants') ) {
+            Schema::create('tenants', function (Blueprint $table) {
+                $table->id();
+                $table->string("name");
+                $table->string("slug");
+                $table->timestamps();
+            });
 
-        Tenant::create([
-            'name' => 'default',
-            'slug' => 'default',
-        ]);
+            Tenant::create([
+                'name' => 'default',
+                'slug' => 'default',
+            ]);
+        }
     }
 
     /**

@@ -31,9 +31,13 @@ return new class extends Migration
             if (in_array($table['name'], $this->skipTables)) {
                 continue;
             }
-            Schema::table($table['name'], function ($table) {
-                $table->foreignIdFor(Tenant::class)->nullable()->constrained();
-            });
+
+            if (Schema::hasColumn($table['name'], 'tenant_id'))
+            {
+                Schema::table($table['name'], function ($table) {
+                    $table->foreignIdFor(Tenant::class)->nullable()->constrained();
+                });
+            }
         }
     }
 
