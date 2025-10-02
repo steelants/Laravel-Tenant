@@ -32,7 +32,7 @@ return new class extends Migration
                 continue;
             }
 
-            if (Schema::hasColumn($table['name'], 'tenant_id'))
+            if (!Schema::hasColumn($table['name'], 'tenant_id'))
             {
                 Schema::table($table['name'], function ($table) {
                     $table->foreignIdFor(Tenant::class)->nullable()->constrained();
