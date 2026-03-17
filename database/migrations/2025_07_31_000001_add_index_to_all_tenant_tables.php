@@ -2,6 +2,7 @@
 
 use SteelAnts\LaravelTenant\Models\Tenant;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 
@@ -15,6 +16,10 @@ return new class extends Migration
     public function up()
     {
         foreach (Schema::getTables() as $table) {
+            if (DB::connection()->getDriverName() === 'pgsql' && isset($table['schema']) && $table['schema'] !== 'public') {
+                continue;
+            }
+
             if (!Schema::hasColumn($table['name'], 'tenant_id')) {
                 continue;
             }
@@ -37,6 +42,10 @@ return new class extends Migration
     public function down()
     {
         foreach (Schema::getTables() as $table) {
+            if (DB::connection()->getDriverName() === 'pgsql' && isset($table['schema']) && $table['schema'] !== 'public') {
+                continue;
+            }
+
             if (!Schema::hasColumn($table['name'], 'tenant_id')) {
                 continue;
             }

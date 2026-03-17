@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use SteelAnts\LaravelTenant\Models\Tenant;
 
@@ -20,6 +21,19 @@ return new class extends Migration
         'sessions',
     ];
 
+    private function shouldSkip(array $table): bool
+    {
+        if (in_array($table['name'], $this->skipTables)) {
+            return true;
+        }
+
+        if (DB::connection()->getDriverName() === 'pgsql' && isset($table['schema']) && $table['schema'] !== 'public') {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Run the migrations.
      *
@@ -28,16 +42,17 @@ return new class extends Migration
     public function up()
     {
         foreach (Schema::getTables() as $table) {
-            if (in_array($table['name'], $this->skipTables)) {
+            if ($this->shouldSkip($table)) {
                 continue;
             }
 
-            if (!Schema::hasColumn($table['name'], 'tenant_id'))
-            {
-                Schema::table($table['name'], function ($table) {
-                    $table->foreignIdFor(Tenant::class)->nullable()->constrained();
-                });
+            if (Schema::hasColumn($table['name'], 'tenant_id')) {
+                continue;
             }
+
+            Schema::table($table['name'], function ($table) {
+                $table->foreignIdFor(Tenant::class)->nullable()->constrained();
+            });
         }
     }
 
@@ -49,11 +64,15 @@ return new class extends Migration
     public function down()
     {
         foreach (Schema::getTables() as $table) {
-            if (in_array($table['name'], $this->skipTables)) {
+            if ($this->shouldSkip($table)) {
                 continue;
             }
 
-            Schema::table('users', function ($table) {
+            if (!Schema::hasColumn($table['name'], 'tenant_id')) {
+                continue;
+            }
+
+            Schema::table($table['name'], function ($table) {
                 $table->dropForeign([$table . '_tenant_tenant_id_foreign']);
                 $table->dropColumn('tenant_id');
             });
