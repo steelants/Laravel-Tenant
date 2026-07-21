@@ -5,6 +5,7 @@ namespace SteelAnts\LaravelTenant\Services;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
+use SteelAnts\LaravelBoilerplate\Services\FileService;
 
 class TenantManager
 {
@@ -18,6 +19,11 @@ class TenantManager
     public function set($tenant = null)
     {
         $this->tenant = $tenant;
+
+        if (class_exists(FileService::class)) {
+            app(FileService::class)->setPrefix($tenant ? 'tenant_media/' . $tenant->id : '');
+        }
+
         if ($tenant != null && config('tenant.resolver') == 'subdomain') {
             if (!config()->has('app.url_root')) {
                 Config::set('app.url_root', config('app.url'));
